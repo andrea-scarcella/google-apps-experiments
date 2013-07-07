@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Channel API demo</title>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="/_ah/channel/jsapi" type="text/javascript"></script>
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+		<script type="text/javascript">
+			// TODO create a channel and set up the message handler
+
+	    function onMessage(message) {
+	    	data = $.parseJSON(message.data);
+	    	if (data.type == 'move') {
+	    		moveCursor(data.client, parseInt(data.x), parseInt(data.y));
+	    	} else if (data.type == 'disconnect') {
+	    		destroyCursor(data.client);
+	    	}
+	    }
+
+	    function moveCursor(client, x, y) {
+	    	var client_id = '#' + client;
+	    	if (! $(client_id).length) {
+	    		createCursor(client);
+	    	}
+	    	$(client_id).css('left', Math.min(x+1, $(window).width())-16 + 'px');
+	    	$(client_id).css('top', Math.min(y, $(window).height()) + 'px');
+	    }
+
+	    function createCursor(client) {
+	    	$('<div/>', {
+	    		id: client,
+	    		class: 'cursor',
+	    		style: 'color: ' + getRandomColor() + ';',
+	    		html: '<i class="icon-location-arrow"></i>',
+	    	}).appendTo('body');
+
+	    }
+
+	    function destroyCursor(client) {
+	    	$('#' + client).remove();
+	    }
+
+	    function getRandomColor() {
+	    	return '#'+Math.floor(Math.random()*16777215).toString(16);
+	    }
+
+			var current_x = -1;
+			var current_y = -1;
+
+			var last_sent_x = -1;
+			var last_sent_y = -1;
+
+			function sendCoordinates() {
+				if (current_x == last_sent_x && current_y == last_sent_y) {
+					return;
+				}
+
+				// TODO send coordinates to server
+
+				last_sent_x = current_x;
+				last_sent_y = current_y;
+			}
+
+			function processMove(x, y) {
+				current_x = x;
+				current_y = y;
+			}
+
+			setInterval(sendCoordinates, 500);
+		</script>
+		<style>
+	 		body {
+	 			background-color: #eef;
+	 		}
+	      	.cursor { 
+	      		transition: all 500ms;
+	      		-webkit-transition: all 500ms;
+	      		font-size: 16px;
+	      		position: absolute;
+	      		height: 16px;
+	      		width: 16px;
+	      	}
+	    </style>
+	</head>
+	<body>
+		<script>
+			$(document).on('mousemove',function(e){
+				processMove(e.pageX, e.pageY);
+			});
+
+			setUpChannel();
+		</script>
+	</body>
+</html>
