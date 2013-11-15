@@ -7,6 +7,10 @@
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 		<script type="text/javascript">
 			// TODO create a channel and set up the message handler
+		function setUpChannel(){
+		var clid='{{ template_values.client_id }}';
+		console.log(clid);
+		}
 
 	    function onMessage(message) {
 	    	data = $.parseJSON(message.data);
@@ -83,6 +87,10 @@
 	    </style>
 	</head>
 	<body>
+	<!--
+	<div id="#client_id" style="display:none">{{ template_values.client_id }}</div>
+	<div id="#channel_token" style="display:none">{{ template_values.channel_token }}</div>
+	-->
 		<script>
 			$(document).on('mousemove',function(e){
 				processMove(e.pageX, e.pageY);

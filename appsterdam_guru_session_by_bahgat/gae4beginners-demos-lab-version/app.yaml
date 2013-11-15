@@ -16,6 +16,8 @@ handlers:
 # main webapp handlers
 - url: .*
   script: main.app
+#- url: /channel
+  #script: /channel/handlers.py
 
 libraries:
 - name: webapp2

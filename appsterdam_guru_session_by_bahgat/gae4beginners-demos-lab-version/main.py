@@ -11,4 +11,5 @@ jinja_environment = jinja2.Environment(
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     # TODO here's where you should map your URLs
+	('/channel','handlers.CursorHandler')
 ], debug=True)

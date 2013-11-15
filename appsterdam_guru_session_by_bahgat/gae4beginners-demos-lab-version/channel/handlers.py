@@ -15,13 +15,19 @@ class CursorHandler(webapp2.RequestHandler):
     template = main.jinja_environment.get_template(
         os.path.join('channel', 'index.html'))
     self.response.out.write(template.render(template_values))
+  
 
   def get(self):
     client_id = uuid.uuid4().hex
-
-    # TODO create a channel and supply the id and token to the client
-    pass
-    
+	# TODO create a channel and supply the id and token to the client
+	channel_token=channel.create_channel(client_id)
+	# persist/retrieve tokens... ==> memcache, use get_multi to list at most 32mb worth of keys..
+	memcache.set(client_id,channel_token)
+    # return client_id and channel_token to client
+	template_values = {
+						'client_id': client_id,
+						'channel_token': channel_token
+						}
     self._render_template(template_values)
 
   def post(self):
@@ -38,7 +44,8 @@ class ConnectHandler(webapp2.RequestHandler):
 
   def post(self):
     # TODO add this client to the list of known clients
-    # start from this: client_id = self.request.get('from')
+    # start from this: 
+	client_id = self.request.get('from')
     pass
 
 class DisconnectHandler(webapp2.RequestHandler):
